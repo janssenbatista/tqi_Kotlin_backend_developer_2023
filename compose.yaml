@@ -1,0 +1,9 @@
+services:
+  postgres:
+    image: 'postgres:14'
+    environment:
+      - 'POSTGRES_DB=jumarket_db'
+      - 'POSTGRES_USER=postgres'
+      - 'POSTGRES_PASSWORD=postgres'
+    ports:
+      - '5432'

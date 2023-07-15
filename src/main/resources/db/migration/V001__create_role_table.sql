@@ -1,0 +1,4 @@
+CREATE TABLE IF NOT EXISTS tb_roles(
+    id SERIAL NOT NULL PRIMARY KEY,
+    description VARCHAR(8) NOT NULL
+)

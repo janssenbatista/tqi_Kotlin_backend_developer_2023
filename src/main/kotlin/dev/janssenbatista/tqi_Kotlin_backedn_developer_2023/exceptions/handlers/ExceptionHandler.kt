@@ -17,6 +17,8 @@ class ExceptionHandler {
             is EmployeeNotFoundException -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.message)
             is CustomerAlreadyExistsException -> ResponseEntity.status(HttpStatus.CONFLICT).body(ex.message)
             is CustomerNotFoundException -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.message)
+            is CategoryAlreadyExistsException -> ResponseEntity.status(HttpStatus.CONFLICT).body(ex.message)
+            is CategoryNotFoundException -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.message)
             else -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
         }
     }

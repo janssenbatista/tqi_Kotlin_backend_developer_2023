@@ -15,27 +15,35 @@ class WebSecurity {
 
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain =
-            http.csrf { it.disable() }.authorizeHttpRequests {
-                it.apply {
-                    requestMatchers(HttpMethod.POST, "/employees")
-                            .hasRole("ADMIN")
-                    requestMatchers(HttpMethod.GET, "/employees/**")
-                            .hasAnyRole("ADMIN", "EMPLOYEE")
-                    requestMatchers(HttpMethod.PUT, "/employees/**")
-                            .hasAnyRole("ADMIN")
-                    requestMatchers(HttpMethod.DELETE, "/employees/**")
-                            .hasAnyRole("ADMIN")
-                    requestMatchers(HttpMethod.POST, "/customers")
-                            .permitAll()
-                    requestMatchers(HttpMethod.GET, "/customers/**")
-                            .hasAnyRole("ADMIN", "EMPLOYEE", "CUSTOMER")
-                    requestMatchers(HttpMethod.PUT, "/customers/**")
-                            .hasAnyRole("ADMIN", "CUSTOMER")
-                    requestMatchers(HttpMethod.DELETE, "/customers/**")
-                            .hasAnyRole("ADMIN", "CUSTOMER")
-                    anyRequest().denyAll()
-                }
-            }.httpBasic(Customizer.withDefaults()).build()
+        http.csrf { it.disable() }.authorizeHttpRequests {
+            it.apply {
+                requestMatchers(HttpMethod.POST, "/employees")
+                    .hasRole("ADMIN")
+                requestMatchers(HttpMethod.GET, "/employees/**")
+                    .hasAnyRole("ADMIN", "EMPLOYEE")
+                requestMatchers(HttpMethod.PUT, "/employees/**")
+                    .hasAnyRole("ADMIN")
+                requestMatchers(HttpMethod.DELETE, "/employees/**")
+                    .hasAnyRole("ADMIN")
+                requestMatchers(HttpMethod.POST, "/customers")
+                    .permitAll()
+                requestMatchers(HttpMethod.GET, "/customers/**")
+                    .hasAnyRole("ADMIN", "EMPLOYEE", "CUSTOMER")
+                requestMatchers(HttpMethod.PUT, "/customers/**")
+                    .hasAnyRole("ADMIN", "CUSTOMER")
+                requestMatchers(HttpMethod.DELETE, "/customers/**")
+                    .hasAnyRole("ADMIN", "CUSTOMER")
+                requestMatchers(HttpMethod.POST, "/categories")
+                    .hasAnyRole("ADMIN", "EMPLOYEE")
+                requestMatchers(HttpMethod.GET, "/categories/**")
+                    .hasAnyRole("ADMIN", "EMPLOYEE")
+                requestMatchers(HttpMethod.PUT, "/categories/**")
+                    .hasAnyRole("ADMIN", "EMPLOYEE")
+                requestMatchers(HttpMethod.DELETE, "/categories/**")
+                    .hasAnyRole("ADMIN", "EMPLOYEE")
+                anyRequest().denyAll()
+            }
+        }.httpBasic(Customizer.withDefaults()).build()
 
     @Bean
     fun passwordEncoder() = BCryptPasswordEncoder(12)

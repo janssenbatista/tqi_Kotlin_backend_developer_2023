@@ -17,8 +17,8 @@ import java.util.*
 class EmployeeService(private val userRepository: UserRepository) {
 
     fun save(userRequestDto: UserRequestDto): User {
-        val customerAlreadyExists = userRepository.findByEmail(userRequestDto.email)
-        if (customerAlreadyExists.isPresent) {
+        val employeeAlreadyExists = userRepository.findByEmail(userRequestDto.email)
+        if (employeeAlreadyExists.isPresent) {
             throw EmployeeAlreadyExistsException("employee already exists")
         }
         val user = userRequestDto.toEntity(Role.EMPLOYEE)
@@ -58,11 +58,13 @@ class EmployeeService(private val userRepository: UserRepository) {
         userRepository.save(employee)
     }
 
-    private fun verifyPermission(userId: UUID, message: String) {
-        val email = SecurityContextHolder.getContext().authentication.name
-        val user = userRepository.findByEmail(email).orElseThrow { throw IllegalArgumentException() }
-        if (user.roleId != -1 && user.id != userId) {
-            throw ForbiddenException(message)
+    private fun verifyPermission(userId: UUID, message: String?) {
+        if (SecurityContextHolder.getContext().authentication != null) {
+            val email = SecurityContextHolder.getContext().authentication.name
+            val user = userRepository.findByEmail(email).orElseThrow { throw IllegalArgumentException() }
+            if (user.roleId != -1 && user.id != userId) {
+                throw ForbiddenException(message)
+            }
         }
     }
 }

@@ -26,7 +26,7 @@ class EmployeeService(private val userRepository: UserRepository) {
     }
 
     fun findById(userId: UUID): User {
-        verifyPermission(userId = userId, message = "Only admin or the owner can see this information")
+        verifyPermission(userId = userId, message = "only admin or the owner can see this information")
         val employee = userRepository.findById(userId).orElseThrow {
             throw EmployeeNotFoundException("employee not found")
         }
@@ -58,7 +58,7 @@ class EmployeeService(private val userRepository: UserRepository) {
         userRepository.save(employee)
     }
 
-    private fun verifyPermission(userId: UUID, message: String?) {
+    fun verifyPermission(userId: UUID, message: String?) {
         if (SecurityContextHolder.getContext().authentication != null) {
             val email = SecurityContextHolder.getContext().authentication.name
             val user = userRepository.findByEmail(email).orElseThrow { throw IllegalArgumentException() }

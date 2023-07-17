@@ -27,7 +27,7 @@ class CustomerService(private val userRepository: UserRepository) {
 
     fun findById(userId: UUID): User {
         verifyPermission(userId = userId,
-                message = "Only admin or the owner can see this information")
+            message = "only admin or the owner can see this information")
         val customer = userRepository.findById(userId).orElseThrow {
             throw CustomerNotFoundException("customer not found")
         }
@@ -35,6 +35,7 @@ class CustomerService(private val userRepository: UserRepository) {
     }
 
     fun update(userId: UUID, userRequestDto: UserRequestDto): User {
+        verifyPermission(userId = userId, "you cannot update data of other customer")
         val customerToUpdate = userRepository.findById(userId).orElseThrow {
             throw CustomerNotFoundException("customer not found")
         }
@@ -52,6 +53,7 @@ class CustomerService(private val userRepository: UserRepository) {
     }
 
     fun delete(userId: UUID) {
+        verifyPermission(userId = userId, message = "you cannot delete other of other customer")
         val customer = userRepository.findById(userId).orElseThrow {
             throw CustomerNotFoundException("customer not found")
         }
@@ -59,13 +61,18 @@ class CustomerService(private val userRepository: UserRepository) {
         userRepository.save(customer)
     }
 
-    fun verifyPermission(userId: UUID, message: String?) {
+    private fun verifyPermission(userId: UUID, message: String) {
         if (SecurityContextHolder.getContext().authentication != null) {
-            val email = SecurityContextHolder.getContext().authentication.name
-            val user = userRepository.findByEmail(email).orElseThrow { throw IllegalArgumentException() }
-            if (user.roleId != -1 && user.id != userId) {
+            val user = getUser()
+            if (user.roleId > 2 && user.id != userId) {
                 throw ForbiddenException(message)
             }
         }
+    }
+
+    private fun getUser(): User {
+        val email = SecurityContextHolder.getContext().authentication.name
+        return userRepository
+            .findByEmail(email).orElseThrow { throw IllegalArgumentException() }
     }
 }

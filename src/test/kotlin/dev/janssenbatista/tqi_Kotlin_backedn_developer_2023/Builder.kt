@@ -57,7 +57,6 @@ fun buildProduct(): Product {
         measurementUnit = "UND",
         unitPrice = BigDecimal.valueOf(1.0),
         quantityInStock = 1,
-        categoryId = 1,
         category = Category(id = 1, name = "Category Name"),
         createdAt = ZonedDateTime.now(),
         updatedAt = ZonedDateTime.now()

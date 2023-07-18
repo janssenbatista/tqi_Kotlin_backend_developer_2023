@@ -1,8 +1,10 @@
 package dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.services
 
+import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.buildProduct
 import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.dtos.CategoryRequestDto
 import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.exceptions.CategoryAlreadyExistsException
 import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.exceptions.CategoryNotFoundException
+import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.exceptions.ConstraintViolationException
 import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.models.Category
 import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.repositories.CategoryRepository
 import io.mockk.every
@@ -124,7 +126,21 @@ class CategoryServiceUnitTest {
             categoryService.delete(categoryId)
         }.withMessage("category not found")
         verify(exactly = 1) { categoryRepository.findById(categoryId) }
-        verify(exactly = 0) { categoryRepository.save(any()) }
+        verify(exactly = 0) { categoryRepository.delete(any()) }
+    }
+
+    @Test
+    fun `should not be able to delete when it has products associated`() {
+        val category = Category(
+            id = 1,
+            name = "category name",
+            products = mutableListOf(buildProduct()))
+        every { categoryRepository.findById(any()) } returns Optional.of(category)
+        assertThatExceptionOfType(ConstraintViolationException::class.java).isThrownBy {
+            categoryService.delete(category.id!!)
+        }.withMessage("cannot delete this category because are products associated")
+        verify(exactly = 1) { categoryRepository.findById(any()) }
+        verify(exactly = 0) { categoryRepository.delete(any()) }
     }
 
 

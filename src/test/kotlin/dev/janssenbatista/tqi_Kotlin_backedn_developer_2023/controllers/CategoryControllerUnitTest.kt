@@ -5,6 +5,7 @@ import com.ninjasquad.springmockk.MockkBean
 import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.dtos.CategoryRequestDto
 import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.exceptions.CategoryAlreadyExistsException
 import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.exceptions.CategoryNotFoundException
+import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.exceptions.ConstraintViolationException
 import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.models.Category
 import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.security.WebSecurity
 import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.services.CategoryService
@@ -50,7 +51,7 @@ class CategoryControllerUnitTest {
             name = dto.name,
             createdAt = ZonedDateTime.now(),
             updatedAt = ZonedDateTime.now(),
-            products = listOf()
+            products = mutableListOf()
         )
     }
 
@@ -242,6 +243,17 @@ class CategoryControllerUnitTest {
         every { categoryService.delete(any()) } returns Unit
         mockMvc.perform(delete("/categories/1"))
             .andExpect(status().isNoContent)
+    }
+
+    @Test
+    @WithMockUser(roles = ["ADMIN"])
+    fun `should not be able to delete when it has products associated and return status code 400`() {
+        val message = "cannot delete this category because are products associated"
+        every { categoryService.delete(any()) } throws ConstraintViolationException(message)
+        val result = mockMvc.perform(delete("/categories/1"))
+            .andExpect(status().isBadRequest)
+            .andReturn()
+        assertThat(result.response.contentAsString).isEqualTo(message)
     }
 
     @Test

@@ -21,6 +21,7 @@ class ExceptionHandler {
             is CategoryNotFoundException -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.message)
             is ProductAlreadyExistsException -> ResponseEntity.status(HttpStatus.CONFLICT).body(ex.message)
             is ProductNotFoundException -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.message)
+            is ConstraintViolationException -> ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.message)
             else -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
         }
     }

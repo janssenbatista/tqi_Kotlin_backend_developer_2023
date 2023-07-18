@@ -37,7 +37,7 @@ class CategoryService(private val categoryRepository: CategoryRepository) {
             throw CategoryNotFoundException("category not found")
         }
         val categoryAlreadyExists = categoryRepository.findByName(categoryRequestDto.name)
-        if (categoryAlreadyExists.isPresent) {
+        if (categoryAlreadyExists.isPresent && category != categoryAlreadyExists.get()) {
             throw CategoryAlreadyExistsException("other category with the same name already exists")
         }
         category.apply {

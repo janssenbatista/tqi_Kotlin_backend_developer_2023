@@ -13,15 +13,17 @@ data class Product(
     val id: UUID? = UUID.randomUUID(),
     @Column(length = 100, nullable = false, unique = true)
     var name: String,
-    @Column(name = "measurement_unit",length = 5, nullable = false)
+    @Column(name = "measurement_unit", length = 5, nullable = false)
     var measurementUnit: String,
     @Column(name = "unit_price", nullable = false)
     var unitPrice: BigDecimal,
     @Column(name = "quantity_in_stock")
     var quantityInStock: Int,
+    @Column(name = "category_id", nullable = false)
+    var categoryId: Int,
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
-    var category: Category,
+    var category: Category? = null,
     @Column(name = "created_at")
     val createdAt: ZonedDateTime = ZonedDateTime.now(),
     @Column(name = "updated_at")

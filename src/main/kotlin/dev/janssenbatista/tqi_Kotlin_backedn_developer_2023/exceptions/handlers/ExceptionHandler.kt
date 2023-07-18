@@ -19,6 +19,8 @@ class ExceptionHandler {
             is CustomerNotFoundException -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.message)
             is CategoryAlreadyExistsException -> ResponseEntity.status(HttpStatus.CONFLICT).body(ex.message)
             is CategoryNotFoundException -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.message)
+            is ProductAlreadyExistsException -> ResponseEntity.status(HttpStatus.CONFLICT).body(ex.message)
+            is ProductNotFoundException -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.message)
             else -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
         }
     }

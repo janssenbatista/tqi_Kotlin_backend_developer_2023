@@ -10,7 +10,7 @@ import java.util.*
 data class Product(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    val id: UUID? = UUID.randomUUID(),
+    var id: UUID? = UUID.randomUUID(),
     @Column(length = 100, nullable = false, unique = true)
     var name: String,
     @Column(name = "measurement_unit", length = 5, nullable = false)
@@ -19,11 +19,9 @@ data class Product(
     var unitPrice: BigDecimal,
     @Column(name = "quantity_in_stock")
     var quantityInStock: Int,
-    @Column(name = "category_id", nullable = false)
-    var categoryId: Int,
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
-    var category: Category? = null,
+    var category: Category,
     @Column(name = "created_at")
     val createdAt: ZonedDateTime = ZonedDateTime.now(),
     @Column(name = "updated_at")

@@ -49,7 +49,6 @@ class ProductService(private val productRepository: ProductRepository,
             measurementUnit = dto.measurementUnit
             unitPrice = dto.unitPrice
             quantityInStock = dto.quantityInStock
-            categoryId = category.id!!
             category = category
             updatedAt = ZonedDateTime.now()
         }

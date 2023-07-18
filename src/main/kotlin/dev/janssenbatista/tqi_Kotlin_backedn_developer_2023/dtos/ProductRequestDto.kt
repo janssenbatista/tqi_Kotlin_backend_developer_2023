@@ -29,7 +29,6 @@ data class ProductRequestDto(
             measurementUnit = measurementUnit,
             unitPrice = unitPrice,
             quantityInStock = quantityInStock,
-            categoryId = categoryId,
             category = category,
             createdAt = ZonedDateTime.now(),
             updatedAt = ZonedDateTime.now())

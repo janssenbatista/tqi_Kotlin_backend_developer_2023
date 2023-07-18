@@ -51,6 +51,7 @@ class CategoryService(private val categoryRepository: CategoryRepository) {
         val category = categoryRepository.findById(categoryId).orElseThrow {
             throw CategoryNotFoundException("category not found")
         }
+
         categoryRepository.delete(category)
     }
 

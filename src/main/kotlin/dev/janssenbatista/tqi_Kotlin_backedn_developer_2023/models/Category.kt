@@ -18,5 +18,7 @@ data class Category(
     @Column(name = "created_at")
     val createdAt: ZonedDateTime = ZonedDateTime.now(),
     @Column(name = "updated_at")
-    var updatedAt: ZonedDateTime = ZonedDateTime.now()
+    var updatedAt: ZonedDateTime = ZonedDateTime.now(),
+    @OneToMany(mappedBy = "category_id")
+    val products: List<Product>? = null
 )

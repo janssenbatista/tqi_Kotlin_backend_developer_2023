@@ -2,21 +2,25 @@ package dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.security
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Lazy
 import org.springframework.http.HttpMethod
-import org.springframework.security.config.Customizer
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 @Configuration
 @EnableWebSecurity
-class WebSecurity {
+class WebSecurity(@Lazy private val jwtAuthFilter: JwtAuthFilter) {
 
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain =
         http.csrf { it.disable() }.authorizeHttpRequests {
             it.apply {
+                requestMatchers("/login")
+                    .permitAll()
                 requestMatchers(HttpMethod.POST, "/employees")
                     .hasRole("ADMIN")
                 requestMatchers(HttpMethod.GET, "/employees/**")
@@ -43,7 +47,7 @@ class WebSecurity {
                     .hasAnyRole("ADMIN", "EMPLOYEE")
                 requestMatchers(HttpMethod.POST, "/products")
                     .hasAnyRole("EMPLOYEE")
-                requestMatchers(HttpMethod.GET, "/products/**")
+                requestMatchers(HttpMethod.GET, "/products", "/products/**")
                     .authenticated()
                 requestMatchers(HttpMethod.PUT, "/products/**")
                     .hasAnyRole("EMPLOYEE")
@@ -51,7 +55,15 @@ class WebSecurity {
                     .hasAnyRole("EMPLOYEE")
                 anyRequest().denyAll()
             }
-        }.httpBasic(Customizer.withDefaults()).build()
+        }
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter::class.java)
+            .httpBasic {
+                it.disable()
+            }
+            .sessionManagement {
+                it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            }
+            .build()
 
     @Bean
     fun passwordEncoder() = BCryptPasswordEncoder(12)

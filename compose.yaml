@@ -2,8 +2,8 @@ services:
   postgres:
     image: 'postgres:14'
     environment:
-      - 'POSTGRES_DB=jumarket_db'
-      - 'POSTGRES_USER=postgres'
-      - 'POSTGRES_PASSWORD=postgres'
+      - 'POSTGRES_DB=${DB_NAME}'
+      - 'POSTGRES_USER=${DB_USERNAME}'
+      - 'POSTGRES_PASSWORD=${DB_PASSWORD}'
     ports:
-      - '5432:5432'
+      - '5432:${DB_PORT}'

@@ -7,6 +7,8 @@ import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.exceptions.CategoryA
 import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.exceptions.CategoryNotFoundException
 import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.exceptions.ConstraintViolationException
 import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.models.Category
+import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.security.JwtAuthFilter
+import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.security.JwtService
 import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.security.WebSecurity
 import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.services.CategoryService
 import io.mockk.every
@@ -26,7 +28,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import java.time.ZonedDateTime
 
 @WebMvcTest(CategoryController::class)
-@Import(WebSecurity::class)
+@Import(WebSecurity::class, JwtAuthFilter::class, JwtService::class)
 class CategoryControllerUnitTest {
 
     @Autowired

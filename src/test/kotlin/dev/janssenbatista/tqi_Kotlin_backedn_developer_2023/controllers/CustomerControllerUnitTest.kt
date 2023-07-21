@@ -9,6 +9,8 @@ import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.enums.Role
 import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.exceptions.CustomerAlreadyExistsException
 import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.exceptions.CustomerNotFoundException
 import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.exceptions.ForbiddenException
+import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.security.JwtAuthFilter
+import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.security.JwtService
 import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.security.WebSecurity
 import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.services.CustomerService
 import io.mockk.every
@@ -28,7 +30,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.util.*
 
 @WebMvcTest(CustomerController::class)
-@Import(WebSecurity::class)
+@Import(WebSecurity::class, JwtAuthFilter::class, JwtService::class)
 class CustomerControllerUnitTest {
 
     @Autowired

@@ -8,6 +8,8 @@ import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.dtos.ProductRequestD
 import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.exceptions.ProductAlreadyExistsException
 import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.exceptions.ProductNotFoundException
 import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.models.Product
+import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.security.JwtAuthFilter
+import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.security.JwtService
 import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.security.WebSecurity
 import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.services.ProductService
 import io.mockk.every
@@ -17,6 +19,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
@@ -29,11 +32,14 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.util.UUID
 
 @WebMvcTest(ProductController::class)
-@Import(WebSecurity::class)
+@Import(WebSecurity::class, JwtAuthFilter::class, JwtService::class)
 class ProductControllerUnitTest {
 
     @MockkBean
     private lateinit var productService: ProductService
+
+    @MockkBean
+    private lateinit var jwtService: JwtService
 
     @Autowired
     private lateinit var mapper: ObjectMapper
@@ -97,11 +103,11 @@ class ProductControllerUnitTest {
     // findAllProducts and findProductById
     @Test
     @WithAnonymousUser
-    fun `should not be able to access products info when user is not authenticated and return status code 401`() {
+    fun `should not be able to access products info when user is not authenticated and return status code 403`() {
         mockMvc.perform(get("/products"))
-            .andExpect(status().isUnauthorized)
+            .andExpect(status().isForbidden)
         mockMvc.perform(get("/products/${UUID.randomUUID()}"))
-            .andExpect(status().isUnauthorized)
+            .andExpect(status().isForbidden)
     }
 
     @Test

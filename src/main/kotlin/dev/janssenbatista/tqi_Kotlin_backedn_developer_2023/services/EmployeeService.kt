@@ -54,6 +54,7 @@ class EmployeeService(private val userRepository: UserRepository) {
         val employee = userRepository.findById(userId).orElseThrow {
             throw EmployeeNotFoundException("employee not found")
         }
+        verifyDeletePermission(userId, "only admin can delete an employee")
         employee.isEnabled = false
         userRepository.save(employee)
     }
@@ -62,7 +63,17 @@ class EmployeeService(private val userRepository: UserRepository) {
         if (SecurityContextHolder.getContext().authentication != null) {
             val email = SecurityContextHolder.getContext().authentication.name
             val user = userRepository.findByEmail(email).orElseThrow { throw IllegalArgumentException() }
-            if (user.roleId != -1 && user.id != userId) {
+            if (user.roleId != 1 && user.id != userId) {
+                throw ForbiddenException(message)
+            }
+        }
+    }
+
+    fun verifyDeletePermission(userId: UUID, message: String?) {
+        if (SecurityContextHolder.getContext().authentication != null) {
+            val email = SecurityContextHolder.getContext().authentication.name
+            val user = userRepository.findByEmail(email).orElseThrow { throw IllegalArgumentException() }
+            if (user.roleId != 1) {
                 throw ForbiddenException(message)
             }
         }

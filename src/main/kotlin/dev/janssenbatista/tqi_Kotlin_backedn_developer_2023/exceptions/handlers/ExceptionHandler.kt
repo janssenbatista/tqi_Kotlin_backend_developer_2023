@@ -23,6 +23,11 @@ class ExceptionHandler {
             is ProductNotFoundException -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.message)
             is ConstraintViolationException -> ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.message)
             is InvalidEmailOrPasswordException -> ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.message)
+            is ShoppingCartNotFoundException -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.message)
+            is BadRequestException -> ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.message)
+            is InsufficientStockException -> ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.message)
+            is ItemAlreadyExistsException -> ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.message)
+            is ItemNotFoundException -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.message)
             else -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
         }
     }

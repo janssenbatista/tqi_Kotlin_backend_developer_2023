@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Lazy
 import org.springframework.http.HttpMethod
+import org.springframework.security.config.Customizer
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
@@ -19,7 +20,7 @@ class WebSecurity(@Lazy private val jwtAuthFilter: JwtAuthFilter) {
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain =
         http.csrf { it.disable() }.authorizeHttpRequests {
             it.apply {
-                requestMatchers("/login")
+                requestMatchers(HttpMethod.POST, "/login")
                     .permitAll()
                 requestMatchers(HttpMethod.POST, "/employees")
                     .hasRole("ADMIN")
@@ -50,16 +51,16 @@ class WebSecurity(@Lazy private val jwtAuthFilter: JwtAuthFilter) {
                 requestMatchers(HttpMethod.GET, "/products", "/products/**")
                     .authenticated()
                 requestMatchers(HttpMethod.PUT, "/products/**")
-                    .hasAnyRole("EMPLOYEE")
+                    .hasRole("EMPLOYEE")
                 requestMatchers(HttpMethod.DELETE, "/products/**")
-                    .hasAnyRole("EMPLOYEE")
+                    .hasRole("EMPLOYEE")
+                requestMatchers("/shopping-carts", "/shopping-carts/**")
+                    .hasRole("CUSTOMER")
                 anyRequest().denyAll()
             }
         }
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter::class.java)
-            .httpBasic {
-                it.disable()
-            }
+            .httpBasic (Customizer.withDefaults())
             .sessionManagement {
                 it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             }

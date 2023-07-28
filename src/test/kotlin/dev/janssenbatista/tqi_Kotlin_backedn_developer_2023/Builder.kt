@@ -1,10 +1,9 @@
 package dev.janssenbatista.tqi_Kotlin_backedn_developer_2023
 
-import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.dtos.ProductRequestDto
-import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.dtos.UserRequestDto
-import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.models.Category
-import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.models.Product
-import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.models.User
+import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.dtos.*
+import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.enums.PaymentMethod
+import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.enums.Role
+import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.models.*
 import java.math.BigDecimal
 import java.time.ZonedDateTime
 import java.util.*
@@ -60,5 +59,33 @@ fun buildProduct(): Product {
         category = Category(id = 1, name = "Category Name"),
         createdAt = ZonedDateTime.now(),
         updatedAt = ZonedDateTime.now()
+    )
+}
+
+fun buildShoppingCart(customer: User = buildUser(roleId = Role.CUSTOMER.value)): ShoppingCart {
+    return ShoppingCart(id = UUID.randomUUID(), customer = customer)
+}
+
+fun buildShoppingCartResponseDto(shoppingCart: ShoppingCart): ShoppingCartResponseDto {
+    return ShoppingCartResponseDto(shoppingCartId = shoppingCart.id!!,
+        customerId = shoppingCart.customer.id!!)
+}
+
+fun buildItem(shoppingCart: ShoppingCart = buildShoppingCart()): Item {
+    return Item(
+        id = UUID.randomUUID(),
+        shoppingCart = shoppingCart,
+        product = buildProduct(),
+        quantity = 1
+    )
+}
+
+fun buildCheckoutResponseDto(paymentMethod: PaymentMethod): CheckoutResponseDto {
+    return CheckoutResponseDto(
+        shoppingCartId = UUID.randomUUID(),
+        customerName = "customer name",
+        totalValue = BigDecimal.ONE,
+        paymentMethod = paymentMethod,
+        paidAt = ZonedDateTime.now()
     )
 }

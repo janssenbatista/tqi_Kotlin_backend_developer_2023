@@ -13,13 +13,10 @@ import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.security.JwtService
 import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.security.WebSecurity
 import dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.services.ProductService
 import io.mockk.every
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
@@ -27,9 +24,8 @@ import org.springframework.security.test.context.support.WithAnonymousUser
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import java.util.UUID
+import java.util.*
 
 @WebMvcTest(ProductController::class)
 @Import(WebSecurity::class, JwtAuthFilter::class, JwtService::class)
@@ -79,7 +75,7 @@ class ProductControllerUnitTest {
             .content(dtoAsString))
             .andExpect(status().isConflict)
             .andReturn()
-        Assertions.assertThat(result.response.contentAsString).isEqualTo(message)
+        assertThat(result.response.contentAsString).isEqualTo(message)
     }
 
     @Test
@@ -103,11 +99,11 @@ class ProductControllerUnitTest {
     // findAllProducts and findProductById
     @Test
     @WithAnonymousUser
-    fun `should not be able to access products info when user is not authenticated and return status code 403`() {
+    fun `should not be able to access products info when user is not authenticated and return status code 401`() {
         mockMvc.perform(get("/products"))
-            .andExpect(status().isForbidden)
+            .andExpect(status().isUnauthorized)
         mockMvc.perform(get("/products/${UUID.randomUUID()}"))
-            .andExpect(status().isForbidden)
+            .andExpect(status().isUnauthorized)
     }
 
     @Test
@@ -184,7 +180,7 @@ class ProductControllerUnitTest {
 
     @Test
     @WithMockUser(roles = ["EMPLOYEE"])
-    fun `should not be able to delele a product when product does not exists and return status code 404`() {
+    fun `should not be able to delete a product when product does not exists and return status code 404`() {
         val message = "product not found"
         every { productService.delete(any()) } throws ProductNotFoundException(message)
         val result = mockMvc.perform(delete("/products/${UUID.randomUUID()}"))

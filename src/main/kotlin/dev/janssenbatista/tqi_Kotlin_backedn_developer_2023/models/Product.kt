@@ -1,5 +1,6 @@
 package dev.janssenbatista.tqi_Kotlin_backedn_developer_2023.models
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
 import java.math.BigDecimal
 import java.time.ZonedDateTime
@@ -22,8 +23,10 @@ data class Product(
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     var category: Category,
+    @JsonIgnore
     @Column(name = "created_at")
     val createdAt: ZonedDateTime = ZonedDateTime.now(),
+    @JsonIgnore
     @Column(name = "updated_at")
     var updatedAt: ZonedDateTime = ZonedDateTime.now()
 )

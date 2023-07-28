@@ -14,8 +14,10 @@ data class Category(
     val id: Int? = null,
     @Column(length = 50, nullable = false)
     var name: String,
+    @JsonIgnore
     @Column(name = "created_at")
     val createdAt: ZonedDateTime = ZonedDateTime.now(),
+    @JsonIgnore
     @Column(name = "updated_at")
     var updatedAt: ZonedDateTime = ZonedDateTime.now(),
     @JsonIgnore

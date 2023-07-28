@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS tb_users(
     name VARCHAR(50) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(62) NOT NULL,
-    role_id INT NOT NULL,
+    role_id SMALLINT NOT NULL,
     is_enabled BOOLEAN NOT NULL DEFAULT TRUE,
     created_at TIMESTAMP WITH TIME ZONE,
     updated_at TIMESTAMP WITH TIME ZONE,

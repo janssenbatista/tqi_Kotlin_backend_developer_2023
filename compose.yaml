@@ -1,4 +1,20 @@
 services:
+
+  jumarket-api:
+    build:
+      context: .
+    env_file:
+      - .env
+    ports:
+      - '8080:80'
+    environment:
+      - 'SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${DB_NAME}'
+      - 'SPRING_DATASOURCE_USERNAME=${DB_USERNAME}'
+      - 'SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}'
+    depends_on:
+      - postgres
+
+
   postgres:
     image: 'postgres:14'
     environment:

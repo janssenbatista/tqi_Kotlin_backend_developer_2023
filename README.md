@@ -29,7 +29,7 @@ Api desenvolvida para resolução do Desafio Bootcamp Kotlin Backend Developer d
 Com a aplicação em execução você pode ver os *endpoints* disponíveis na URL:
 
 ```bash
-https://localhost/swagger-ui.html
+http://localhost/swagger-ui.html
 ```
 
 ### 📐 Arquitetura utilizada no Projeto: Three-layer architecture (Arquitetura de três camadas)

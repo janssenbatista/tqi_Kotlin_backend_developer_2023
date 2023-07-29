@@ -131,7 +131,7 @@ class ShoppingCartService(private val userRepository: UserRepository,
             ItemNotFoundException("item not found")
         }
         if (shoppingCart.id!! != item.shoppingCart.id!!) {
-            throw BadRequestException("item not found")
+            throw ItemNotFoundException("item not found")
         }
         val product = productRepository.findById(item.product.id!!)
         product.get().apply {
@@ -154,7 +154,7 @@ class ShoppingCartService(private val userRepository: UserRepository,
             ItemNotFoundException("item not found")
         }
         if (shoppingCart.id!! != item.shoppingCart.id!!) {
-            throw BadRequestException("item not found")
+            throw ItemNotFoundException("item not found")
         }
         val product = productRepository.findById(item.product.id!!).orElseThrow { BadRequestException(null) }
         product.quantityInStock += item.quantity

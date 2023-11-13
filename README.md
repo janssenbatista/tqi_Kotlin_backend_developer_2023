@@ -6,8 +6,8 @@ Api desenvolvida para resolução do Desafio Bootcamp Kotlin Backend Developer d
 
 ##### Requerimentos:
 
-- [Docker](https://docker.com) instalado
-- [Docker Compose Plugin](https://docs.docker.com/compose/) instalado
+- [Docker](https://docker.com)
+- [Docker Compose Plugin](https://docs.docker.com/compose/)
 
 - Crie um arquivo **.env** na pasta raiz do projeto e adicione as seguintes informações:
 
